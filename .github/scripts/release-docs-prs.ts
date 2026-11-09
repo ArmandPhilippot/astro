@@ -1,4 +1,4 @@
-// Comments on release PRs with the open docs PRs labeled for their release line.
+// Reviews release PRs with a comment listing the open docs PRs labeled for their release line.
 // Usage: node .github/scripts/release-docs-prs.ts [--pr <number>] [--dry-run]
 // Without --pr, it updates every open release PR.
 import { execFileSync } from 'node:child_process';
@@ -87,8 +87,13 @@ function listDocsPrsOnReleasePrs({
 	for (const prNumber of releasePrNumbers) {
 		const releasePr = getReleasePullRequest(repository, prNumber);
 		const body = buildComment(repository, releasePr, docsPrs);
+<<<<<<< HEAD
 		if (isDryRun) console.info(`Comment on #${releasePr.number}:\n\n${body}\n`);
 		else upsertComment(repository, releasePr.number, body);
+=======
+		if (isDryRun) console.info(`Review comment on #${releasePr.number}:\n\n${body}\n`);
+		else upsertReview(repository, releasePr.number, body);
+>>>>>>> bbd4cd43c86f11f714855f3969f69fa99e06e53c
 	}
 }
 
@@ -265,17 +270,35 @@ function formatList(items: string[]) {
 	return `${items.slice(0, -1).join(', ')}, or ${items.at(-1)}`;
 }
 
+<<<<<<< HEAD
 function upsertComment(repository: string, issueNumber: number, body: string) {
 	const [commentId] = callGitHubApi<number>([
 		'--paginate',
 		`repos/${repository}/issues/${issueNumber}/comments`,
+=======
+/**
+ * Posts the comment as a review, which the sidebar of the PR lists, or edits
+ * the review posted before: GitHub cannot delete a submitted review.
+ */
+function upsertReview(repository: string, prNumber: number, body: string) {
+	const reviews = `repos/${repository}/pulls/${prNumber}/reviews`;
+	const [reviewId] = callGitHubApi<number>([
+		'--paginate',
+		reviews,
+>>>>>>> bbd4cd43c86f11f714855f3969f69fa99e06e53c
 		'--jq',
 		`.[] | select(.user.type == "Bot" and (.body | startswith("${COMMENT_MARKER}"))) | .id`,
 	]);
 	const endpoint =
+<<<<<<< HEAD
 		commentId === undefined
 			? ['--method', 'POST', `repos/${repository}/issues/${issueNumber}/comments`]
 			: ['--method', 'PATCH', `repos/${repository}/issues/comments/${commentId}`];
+=======
+		reviewId === undefined
+			? ['--method', 'POST', reviews, '--raw-field', 'event=COMMENT']
+			: ['--method', 'PUT', `${reviews}/${reviewId}`];
+>>>>>>> bbd4cd43c86f11f714855f3969f69fa99e06e53c
 	callGitHubApi([...endpoint, '--raw-field', `body=${body}`, '--jq', '.id']);
 }
 
