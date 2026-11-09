@@ -4,7 +4,7 @@
 import { execFileSync } from 'node:child_process';
 import { parseArgs } from 'node:util';
 
-const DOCS_REPOSITORY = 'withastro/docs';
+const DOCS_REPOSITORY = 'ArmandPhilippot/astro-docs';
 const DOCS_STABLE_BRANCH = 'main';
 const FRAMEWORK_PACKAGE = 'astro';
 /** The branches Changesets opens release PRs from, one per release line. */
@@ -53,7 +53,7 @@ const { values } = parseArgs({
 	options: { pr: { type: 'string' }, 'dry-run': { type: 'boolean', default: false } },
 });
 listDocsPrsOnReleasePrs({
-	repository: process.env.GITHUB_REPOSITORY ?? 'withastro/astro',
+	repository: process.env.GITHUB_REPOSITORY ?? 'ArmandPhilippot/astro',
 	releasePrNumber: values.pr === undefined ? null : parsePrNumber(values.pr),
 	isDryRun: values['dry-run'],
 });

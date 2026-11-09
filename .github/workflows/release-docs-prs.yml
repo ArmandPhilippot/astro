@@ -19,7 +19,7 @@ jobs:
   comment:
     name: List docs PRs
     if: >-
-      github.repository == 'withastro/astro' && (
+      github.repository == 'ArmandPhilippot/astro' && (
         github.event_name == 'workflow_dispatch' || (
           github.event.pull_request.head.repo.full_name == github.repository &&
           (github.head_ref == 'changeset-release/main' || github.head_ref == 'changeset-release/next')
